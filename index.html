@@ -48,7 +48,6 @@
     href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;600;700&display=swap"
   />
   <style>
-    /* 細節微調：柔和卷軸與卡片 hover 動態 */
     html,
     body {
       scroll-behavior: smooth;
@@ -66,6 +65,60 @@
     .day-pill-active {
       background: linear-gradient(135deg, #4fa3c7, #4d6b52);
     }
+    /* 行程卡片展開收合動畫（Accordion） */
+    .day-card .day-body {
+      max-height: 0;
+      overflow: hidden;
+      opacity: 0;
+      transform: translateY(-4px);
+      transition:
+        max-height 0.35s ease,
+        opacity 0.35s ease,
+        transform 0.35s ease;
+    }
+    .day-card.open .day-body {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .day-chevron {
+      transition: transform 0.25s ease;
+    }
+    .day-card.open .day-chevron {
+      transform: rotate(180deg);
+    }
+    .map-pill {
+      transition: background-color 0.15s ease, color 0.15s ease, transform 0.15s ease;
+    }
+    .map-pill:active {
+      transform: scale(0.97);
+    }
+    /* Hero 區塊右側「當日摘要」切換淡入動畫 */
+    .hero-day-card-body {
+      opacity: 0;
+      transform: translateY(4px);
+      transition:
+        opacity 0.25s ease,
+        transform 0.25s ease;
+    }
+    .hero-day-card-body.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .hero-week-day {
+      transition:
+        background-color 0.2s ease,
+        border-color 0.2s ease,
+        color 0.2s ease,
+        transform 0.1s ease;
+    }
+    .hero-week-day.active {
+      background-color: rgba(79, 163, 199, 0.16);
+      border-color: rgba(79, 163, 199, 0.9);
+      color: #0f172a;
+    }
+    .hero-week-day:active {
+      transform: scale(0.96);
+    }
   </style>
 </head>
 <body
@@ -76,7 +129,7 @@
     <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 flex items-center justify-between h-14">
       <div class="flex items-center gap-2">
         <span
-          class="inline-flex h-8 w-8 items-center justify-center rounded-xl bg-ocean dark:text-white text-white shadow-soft"
+          class="inline-flex h-8 w-8 items-center justify-center rounded-xl bg-ocean text-white shadow-soft"
         >
           慢
         </span>
@@ -228,7 +281,7 @@
             </div>
           </div>
 
-          <!-- 右側示意卡片 -->
+          <!-- 右側：可切換每日的「小摘要卡片」 -->
           <div class="lg:pl-6">
             <div
               class="glass-card rounded-3xl shadow-soft p-4 sm:p-5 lg:p-6 border-sand/60"
@@ -249,111 +302,123 @@
                 </span>
               </div>
 
+              <!-- 可點擊的星期小圓條（切換下方摘要） -->
               <div class="grid grid-cols-7 gap-1.5 text-center text-[10px] mb-4">
-                <!-- 簡易週曆 -->
-                <div class="flex flex-col gap-1">
-                  <div
-                    class="rounded-full bg-sand-light/90 border border-sand-dark/60 px-1.5 py-1"
-                  >
-                    <div class="text-[9px] text-slate-500">日</div>
-                    <div class="font-semibold text-slate-800">2/1</div>
-                  </div>
-                  <div class="text-[9px] text-slate-500">抵達 · 夜市</div>
-                </div>
-                <div class="flex flex-col gap-1">
-                  <div
-                    class="rounded-full bg-sand-light/80 border border-sand-dark/50 px-1.5 py-1"
-                  >
-                    <div class="text-[9px] text-slate-500">一</div>
-                    <div class="font-semibold text-slate-800">2/2</div>
-                  </div>
-                  <div class="text-[9px] text-slate-500">遺跡 · 雨備</div>
-                </div>
-                <div class="flex flex-col gap-1">
-                  <div
-                    class="rounded-full bg-sand-light/80 border border-sand-dark/50 px-1.5 py-1"
-                  >
-                    <div class="text-[9px] text-slate-500">二</div>
-                    <div class="font-semibold text-slate-800">2/3</div>
-                  </div>
-                  <div class="text-[9px] text-slate-500">松園別館</div>
-                </div>
-                <div class="flex flex-col gap-1">
-                  <div
-                    class="rounded-full bg-ocean/15 border border-ocean-dark/40 px-1.5 py-1"
-                  >
-                    <div class="text-[9px] text-slate-500">三</div>
-                    <div class="font-semibold text-slate-800">2/4</div>
-                  </div>
-                  <div class="text-[9px] text-slate-700 font-medium">48 高地</div>
-                </div>
-                <div class="flex flex-col gap-1">
-                  <div
-                    class="rounded-full bg-ocean/10 border border-ocean-dark/40 px-1.5 py-1"
-                  >
-                    <div class="text-[9px] text-slate-500">四</div>
-                    <div class="font-semibold text-slate-800">2/5</div>
-                  </div>
-                  <div class="text-[9px] text-slate-700 font-medium">77 高地</div>
-                </div>
-                <div class="flex flex-col gap-1">
-                  <div
-                    class="rounded-full bg-sand-light/80 border border-sand-dark/50 px-1.5 py-1"
-                  >
-                    <div class="text-[9px] text-slate-500">五</div>
-                    <div class="font-semibold text-slate-800">2/6</div>
-                  </div>
-                  <div class="text-[9px] text-slate-500">建築 · Chill</div>
-                </div>
-                <div class="flex flex-col gap-1">
-                  <div
-                    class="rounded-full bg-sand-light/80 border border-sand-dark/50 px-1.5 py-1"
-                  >
-                    <div class="text-[9px] text-slate-500">六</div>
-                    <div class="font-semibold text-slate-800">2/7</div>
-                  </div>
-                  <div class="text-[9px] text-slate-500">燈會 · 返家</div>
-                </div>
+                <!-- Day 1 -->
+                <button
+                  type="button"
+                  class="hero-week-day flex flex-col gap-1 rounded-full bg-sand-light/80 border border-sand-dark/50 px-1.5 py-1 focus:outline-none"
+                  data-day="1"
+                >
+                  <div class="text-[9px] text-slate-500">日</div>
+                  <div class="font-semibold text-slate-800">2/1</div>
+                  <div class="text-[9px] text-slate-500 truncate">抵達 · 夜市</div>
+                </button>
+
+                <!-- Day 2 -->
+                <button
+                  type="button"
+                  class="hero-week-day flex flex-col gap-1 rounded-full bg-sand-light/80 border border-sand-dark/50 px-1.5 py-1 focus:outline-none"
+                  data-day="2"
+                >
+                  <div class="text-[9px] text-slate-500">一</div>
+                  <div class="font-semibold text-slate-800">2/2</div>
+                  <div class="text-[9px] text-slate-500 truncate">遺跡 · 雨備</div>
+                </button>
+
+                <!-- Day 3 -->
+                <button
+                  type="button"
+                  class="hero-week-day flex flex-col gap-1 rounded-full bg-sand-light/80 border border-sand-dark/50 px-1.5 py-1 focus:outline-none"
+                  data-day="3"
+                >
+                  <div class="text-[9px] text-slate-500">二</div>
+                  <div class="font-semibold text-slate-800">2/3</div>
+                  <div class="text-[9px] text-slate-500 truncate">松園別館</div>
+                </button>
+
+                <!-- Day 4 (預設選取) -->
+                <button
+                  type="button"
+                  class="hero-week-day active flex flex-col gap-1 rounded-full border px-1.5 py-1 focus:outline-none"
+                  data-day="4"
+                >
+                  <div class="text-[9px] text-slate-500">三</div>
+                  <div class="font-semibold text-slate-800">2/4</div>
+                  <div class="text-[9px] text-slate-700 truncate">48 高地</div>
+                </button>
+
+                <!-- Day 5 -->
+                <button
+                  type="button"
+                  class="hero-week-day flex flex-col gap-1 rounded-full bg-sand-light/80 border border-sand-dark/50 px-1.5 py-1 focus:outline-none"
+                  data-day="5"
+                >
+                  <div class="text-[9px] text-slate-500">四</div>
+                  <div class="font-semibold text-slate-800">2/5</div>
+                  <div class="text-[9px] text-slate-500 truncate">77 高地</div>
+                </button>
+
+                <!-- Day 6 -->
+                <button
+                  type="button"
+                  class="hero-week-day flex flex-col gap-1 rounded-full bg-sand-light/80 border border-sand-dark/50 px-1.5 py-1 focus:outline-none"
+                  data-day="6"
+                >
+                  <div class="text-[9px] text-slate-500">五</div>
+                  <div class="font-semibold text-slate-800">2/6</div>
+                  <div class="text-[9px] text-slate-500 truncate">建築 · Chill</div>
+                </button>
+
+                <!-- Day 7 -->
+                <button
+                  type="button"
+                  class="hero-week-day flex flex-col gap-1 rounded-full bg-sand-light/80 border border-sand-dark/50 px-1.5 py-1 focus:outline-none"
+                  data-day="7"
+                >
+                  <div class="text-[9px] text-slate-500">六</div>
+                  <div class="font-semibold text-slate-800">2/7</div>
+                  <div class="text-[9px] text-slate-500 truncate">燈會 · 返家</div>
+                </button>
               </div>
 
-              <!-- 小型當日卡片示意 -->
+              <!-- 下方會跟著日期切換的「當日摘要卡片」 -->
               <div
-                class="rounded-2xl border border-white/70 bg-white/90 p-3 flex flex-col gap-2"
+                class="rounded-2xl border border-white/70 bg-white/90 p-3 flex flex-col gap-2 hero-day-card-body visible"
+                id="heroDayCard"
               >
                 <div class="flex items-center justify-between gap-2">
                   <div class="flex items-center gap-2">
                     <div
                       class="inline-flex items-center justify-center rounded-xl bg-ocean/15 text-ocean-dark px-2 py-1 text-[11px] font-semibold"
+                      id="heroDayLabel"
                     >
                       Day 4 · 2/4 三
                     </div>
-                    <span class="text-xs text-slate-500">高地 · 看海 · 機車日</span>
-                  </div>
-                  <div class="flex items-center gap-1 text-xs text-slate-700">
-                    <span>🌤️</span><span>轉晴</span>
-                  </div>
-                </div>
-                <div class="grid grid-cols-[auto,1fr] gap-x-3 gap-y-1.5 text-[11px]">
-                  <div class="text-slate-500">10:00</div>
-                  <div class="text-slate-700">租機車，準備高地與海岸一日線</div>
-                  <div class="text-slate-500">11:00</div>
-                  <div class="text-slate-800">
-                    <span class="font-semibold text-moss-dark">48 Highland &amp; 戰備坑道</span>
-                    <span class="ml-1 rounded-full bg-moss/10 text-moss-dark px-1.5 py-0.5">
-                      必去
+                    <span
+                      class="text-xs text-slate-500"
+                      id="heroDayMeta"
+                    >
+                      高地 · 看海 · 機車日
                     </span>
                   </div>
-                  <div class="text-slate-500">15:00</div>
-                  <div class="text-slate-700">七星潭海邊慢走、堆石看海</div>
-                  <div class="text-slate-500">17:00</div>
-                  <div class="text-slate-700">原野牧場 · 海景羊奶咖啡收尾</div>
+                  <div class="flex items-center gap-1 text-xs text-slate-700">
+                    <span id="heroDayWeatherIcon">🌤️</span>
+                    <span id="heroDayWeatherText">轉晴</span>
+                  </div>
+                </div>
+                <div
+                  class="grid grid-cols-[auto,1fr] gap-x-3 gap-y-1.5 text-[11px]"
+                  id="heroDayItems"
+                >
+                  <!-- 內容由 JS 動態注入 -->
                 </div>
               </div>
 
               <p class="mt-3 text-[11px] text-slate-500 leading-relaxed">
-                小提醒：行程安排以「舒服、不勉強」為優先，若遇連日大雨，可將
-                <span class="font-medium">Day 4 高地線</span> 與
-                <span class="font-medium">Day 5 高地補完線</span> 對調或合併。
+                小提醒：行程安排以「舒服、不勉強」為優先，若遇連日大雨，可彈性替換
+                <span class="font-medium">高地日</span> 與
+                <span class="font-medium">室內日</span> 的順序。
               </p>
             </div>
           </div>
@@ -427,7 +492,7 @@
       </div>
     </section>
 
-    <!-- 每日行程卡片 -->
+    <!-- 每日行程卡片（Accordion） -->
     <section id="itinerary" class="py-10 sm:py-12 bg-sand-light/40 border-y border-sand/40">
       <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-6">
@@ -438,66 +503,93 @@
               七日行程時間軸
             </h2>
             <p class="mt-1 text-sm text-slate-600 max-w-xl leading-relaxed">
-              採用 card-based 排版，從 Day 1 到 Day 7
-              依序排列。手機版以垂直時間軸閱讀，桌機版則可一眼瀏覽完整週計畫。
+              採用「可展開卡片」設計：手機上只看到乾淨的每日標題，輕點即可滑出詳細時程。
             </p>
           </div>
-          <div class="flex flex-wrap gap-2 text-[11px]">
-            <span
-              class="inline-flex items-center gap-1 rounded-full bg-white px-3 py-1 border border-ocean/40 text-ocean-dark font-medium"
-            >
-              <span class="h-2 w-2 rounded-full bg-ocean-dark"></span>
-              <span>藍色：看海 / 高地</span>
-            </span>
-            <span
-              class="inline-flex items-center gap-1 rounded-full bg-white px-3 py-1 border border-moss/40 text-moss-dark font-medium"
-            >
-              <span class="h-2 w-2 rounded-full bg-moss"></span>
-              <span>綠色：遺跡 / 歷史</span>
-            </span>
+          <div class="flex flex-col items-start sm:items-end gap-1 text-[11px] text-slate-600">
+            <div class="inline-flex items-center gap-1">
+              <span class="text-xs">☝️</span>
+              <span>點擊任一「Day」卡片即可展開 / 收合行程細節。</span>
+            </div>
+            <div class="inline-flex items-center gap-1">
+              <span class="text-xs">📍</span>
+              <span>每個地點旁邊的「地圖」按鈕，可直接打開 Google Maps 導航。</span>
+            </div>
           </div>
         </div>
 
         <div class="grid gap-5 lg:grid-cols-2 xl:grid-cols-3">
           <!-- Day 1 -->
           <article
-            class="relative rounded-3xl bg-white/95 border border-white/90 shadow-sm hover:shadow-soft transition-shadow flex flex-col overflow-hidden"
+            class="day-card relative rounded-3xl bg-white/95 border border-white/90 shadow-sm hover:shadow-soft transition-shadow flex flex-col overflow-hidden"
           >
             <div class="h-1 w-full bg-gradient-to-r from-ocean via-moss to-sand-dark"></div>
-            <div class="p-4 sm:p-5 flex flex-col gap-3">
-              <header class="flex items-start justify-between gap-3">
-                <div>
-                  <div class="flex items-center gap-2 mb-1">
-                    <span
-                      class="inline-flex items-center justify-center rounded-full bg-sand-light px-2.5 py-1 text-[11px] font-semibold text-slate-800"
-                    >
-                      Day 1 · 2/1（日）
-                    </span>
-                    <span
-                      class="inline-flex items-center gap-1 rounded-full bg-sand-light/80 px-2 py-1 text-[11px] text-slate-600"
-                    >
-                      <span>🌧️</span><span>雨天 · 抵達 &amp; 夜市</span>
-                    </span>
-                  </div>
-                  <h3 class="text-sm font-semibold text-slate-900">
-                    抵達花蓮 · 老房咖啡 · 東大門夜市
-                  </h3>
-                  <p class="mt-1 text-xs text-slate-600">
-                    讓第一天只做三件事：進房、喝咖啡、夜市散步。
-                  </p>
+            <button
+              type="button"
+              class="w-full text-left p-4 sm:p-5 flex items-center justify-between gap-3 focus:outline-none"
+              aria-expanded="false"
+            >
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center gap-2 mb-1">
+                  <span
+                    class="inline-flex items-center justify-center rounded-full bg-sand-light px-2.5 py-1 text-[11px] font-semibold text-slate-800"
+                  >
+                    Day 1 · 2/1（日）
+                  </span>
+                  <span
+                    class="inline-flex items-center gap-1 rounded-full bg-sand-light/80 px-2 py-1 text-[11px] text-slate-600"
+                  >
+                    <span>🌧️</span><span>雨天 · 抵達 &amp; 夜市</span>
+                  </span>
                 </div>
-              </header>
-
-              <dl class="space-y-1.5 text-xs text-slate-700">
+                <h3 class="text-sm font-semibold text-slate-900 truncate">
+                  抵達花蓮 · 老房咖啡 · 東大門夜市
+                </h3>
+                <p class="mt-1 text-xs text-slate-600 line-clamp-2">
+                  讓第一天只做三件事：進房、喝咖啡、夜市散步。
+                </p>
+              </div>
+              <div class="flex items-center gap-2 shrink-0">
+                <span class="hidden sm:inline text-[11px] text-slate-500">點擊展開</span>
+                <span
+                  class="day-chevron inline-flex h-7 w-7 items-center justify-center rounded-full bg-sand-light text-slate-700"
+                  aria-hidden="true"
+                >
+                  ▼
+                </span>
+              </div>
+            </button>
+            <div class="day-body px-4 sm:px-5 pb-4 sm:pb-5">
+              <dl class="space-y-1.5 text-xs text-slate-700 pt-1 border-t border-sand/60 mt-1.5">
                 <div class="grid grid-cols-[auto,1fr] gap-x-3">
                   <dt class="text-slate-500">13:30</dt>
-                  <dd>抵達花蓮，入住 <span class="font-medium">Lazy House</span>，稍作休息。</dd>
+                  <dd>
+                    抵達花蓮，入住
+                    <span class="font-medium">Lazy House</span>
+                    <a
+                      href="https://www.google.com/maps/search/?api=1&query=Lazy%20House%20%E8%8A%B1%E8%93%AE"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="map-pill inline-flex items-center gap-1 rounded-full border border-ocean/40 text-[10px] px-2 py-0.5 ml-1 text-ocean-dark hover:bg-ocean/10"
+                    >
+                      📍 地圖
+                    </a>
+                    ，稍作休息。
+                  </dd>
                 </div>
                 <div class="grid grid-cols-[auto,1fr] gap-x-3">
                   <dt class="text-slate-500">15:00</dt>
                   <dd>
                     ☕ 咖啡：
                     <span class="font-semibold text-moss-dark">「Giocare」</span>
+                    <a
+                      href="https://www.google.com/maps/search/?api=1&query=Giocare%20%E8%8A%B1%E8%93%AE"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="map-pill inline-flex items-center gap-1 rounded-full border border-ocean/40 text-[10px] px-2 py-0.5 ml-1 text-ocean-dark hover:bg-ocean/10"
+                    >
+                      📍 地圖
+                    </a>
                     （日式老房 · 有貓 · 陶藝氛圍）。
                   </dd>
                 </div>
@@ -505,15 +597,32 @@
                   <dt class="text-slate-500">17:00</dt>
                   <dd>
                     漫步
-                    <span class="font-semibold text-moss-dark">花蓮文化創意產業園區</span
-                    >，在老倉庫間散步避雨。
+                    <span class="font-semibold text-moss-dark">花蓮文化創意產業園區</span>
+                    <a
+                      href="https://www.google.com/maps/search/?api=1&query=%E8%8A%B1%E8%93%AE%E6%96%87%E5%8C%96%E5%89%B5%E6%84%8F%E7%94%A2%E6%A5%AD%E5%9C%92%E5%8D%80"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="map-pill inline-flex items-center gap-1 rounded-full border border-ocean/40 text-[10px] px-2 py-0.5 ml-1 text-ocean-dark hover:bg-ocean/10"
+                    >
+                      📍 地圖
+                    </a>
+                    ，在老倉庫間散步避雨。
                   </dd>
                 </div>
                 <div class="grid grid-cols-[auto,1fr] gap-x-3">
                   <dt class="text-slate-500">19:00</dt>
                   <dd>
                     晚餐：
-                    <span class="font-medium">東大門夜市</span>，用小吃當「花蓮初見面」的儀式。
+                    <span class="font-medium">東大門夜市</span>
+                    <a
+                      href="https://www.google.com/maps/search/?api=1&query=%E8%8A%B1%E8%93%AE%E6%9D%B1%E5%A4%A7%E9%96%80%E5%A4%9C%E5%B8%82"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="map-pill inline-flex items-center gap-1 rounded-full border border-ocean/40 text-[10px] px-2 py-0.5 ml-1 text-ocean-dark hover:bg-ocean/10"
+                    >
+                      📍 地圖
+                    </a>
+                    ，用小吃當「花蓮初見面」的儀式。
                   </dd>
                 </div>
                 <div class="grid grid-cols-[auto,1fr] gap-x-3">
@@ -521,7 +630,15 @@
                   <dd>
                     🍸 酒吧：
                     <span class="font-semibold text-ocean-dark">「Ginsman」</span>
-                    （Bar Shepherd），安靜的調酒夜，隨體力決定是否前往。
+                    <a
+                      href="https://www.google.com/maps/search/?api=1&query=Ginsman%20Bar%20Shepherd%20%E8%8A%B1%E8%93%AE"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="map-pill inline-flex items-center gap-1 rounded-full border border-ocean/40 text-[10px] px-2 py-0.5 ml-1 text-ocean-dark hover:bg-ocean/10"
+                    >
+                      📍 地圖
+                    </a>
+                    ，安靜的調酒夜，隨體力決定是否前往。
                   </dd>
                 </div>
               </dl>
@@ -530,34 +647,46 @@
 
           <!-- Day 2 -->
           <article
-            class="relative rounded-3xl bg-white/95 border border-white/90 shadow-sm hover:shadow-soft transition-shadow flex flex-col overflow-hidden"
+            class="day-card relative rounded-3xl bg-white/95 border border-white/90 shadow-sm hover:shadow-soft transition-shadow flex flex-col overflow-hidden"
           >
             <div class="h-1 w-full bg-gradient-to-r from-moss via-sand-dark to-ocean"></div>
-            <div class="p-4 sm:p-5 flex flex-col gap-3">
-              <header class="flex items-start justify-between gap-3">
-                <div>
-                  <div class="flex items-center gap-2 mb-1">
-                    <span
-                      class="inline-flex items-center justify-center rounded-full bg-sand-light px-2.5 py-1 text-[11px] font-semibold text-slate-800"
-                    >
-                      Day 2 · 2/2（一）
-                    </span>
-                    <span
-                      class="inline-flex items-center gap-1 rounded-full bg-sand-light/80 px-2 py-1 text-[11px] text-slate-600"
-                    >
-                      <span>🌧️</span><span>雨備 · 遺跡 &amp; 貓咪咖啡</span>
-                    </span>
-                  </div>
-                  <h3 class="text-sm font-semibold text-slate-900">
-                    睡到自然醒 · 考古博物館 · 咖啡小酒館
-                  </h3>
-                  <p class="mt-1 text-xs text-slate-600">
-                    不勉強早起的一天，給身體慢慢切換成度假模式。
-                  </p>
+            <button
+              type="button"
+              class="w-full text-left p-4 sm:p-5 flex items-center justify-between gap-3 focus:outline-none"
+              aria-expanded="false"
+            >
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center gap-2 mb-1">
+                  <span
+                    class="inline-flex items-center justify-center rounded-full bg-sand-light px-2.5 py-1 text-[11px] font-semibold text-slate-800"
+                  >
+                    Day 2 · 2/2（一）
+                  </span>
+                  <span
+                    class="inline-flex items-center gap-1 rounded-full bg-sand-light/80 px-2 py-1 text-[11px] text-slate-600"
+                  >
+                    <span>🌧️</span><span>雨備 · 遺跡 &amp; 貓咪咖啡</span>
+                  </span>
                 </div>
-              </header>
-
-              <dl class="space-y-1.5 text-xs text-slate-700">
+                <h3 class="text-sm font-semibold text-slate-900 truncate">
+                  睡到自然醒 · 考古博物館 · 咖啡小酒館
+                </h3>
+                <p class="mt-1 text-xs text-slate-600 line-clamp-2">
+                  不勉強早起的一天，給身體慢慢切換成度假模式。
+                </p>
+              </div>
+              <div class="flex items-center gap-2 shrink-0">
+                <span class="hidden sm:inline text-[11px] text-slate-500">點擊展開</span>
+                <span
+                  class="day-chevron inline-flex h-7 w-7 items-center justify-center rounded-full bg-sand-light text-slate-700"
+                  aria-hidden="true"
+                >
+                  ▼
+                </span>
+              </div>
+            </button>
+            <div class="day-body px-4 sm:px-5 pb-4 sm:pb-5">
+              <dl class="space-y-1.5 text-xs text-slate-700 pt-1 border-t border-sand/60 mt-1.5">
                 <div class="grid grid-cols-[auto,1fr] gap-x-3">
                   <dt class="text-slate-500">10:00</dt>
                   <dd>在住宿慢慢起床，簡單吃個早午餐，聽雨聲放空。</dd>
@@ -567,6 +696,14 @@
                   <dd>
                     🏛️
                     <span class="font-semibold text-moss-dark">花蓮縣考古博物館（壽豐）</span>
+                    <a
+                      href="https://www.google.com/maps/search/?api=1&query=%E8%8A%B1%E8%93%AE%E7%B8%A3%E8%80%83%E5%8F%A4%E5%8D%9A%E7%89%A9%E9%A4%A8"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="map-pill inline-flex items-center gap-1 rounded-full border border-ocean/40 text-[10px] px-2 py-0.5 ml-1 text-ocean-dark hover:bg-ocean/10"
+                    >
+                      📍 地圖
+                    </a>
                     ，互動式展示，了解花蓮的更久以前。
                   </dd>
                 </div>
@@ -575,6 +712,14 @@
                   <dd>
                     ☕ 咖啡：
                     <span class="font-semibold text-moss-dark">「喵喵咖啡 Miao Miao Cafe」</span>
+                    <a
+                      href="https://www.google.com/maps/search/?api=1&query=Miao%20Miao%20Cafe%20%E8%8A%B1%E8%93%AE"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="map-pill inline-flex items-center gap-1 rounded-full border border-ocean/40 text-[10px] px-2 py-0.5 ml-1 text-ocean-dark hover:bg-ocean/10"
+                    >
+                      📍 地圖
+                    </a>
                     ，兼具美感與貓咪陪伴的空間。
                   </dd>
                 </div>
@@ -582,7 +727,16 @@
                   <dt class="text-slate-500">19:00</dt>
                   <dd>
                     晚餐：
-                    <span class="font-medium">「公正包子」</span> 或餛飩小店，簡單吃、不排隊也行。
+                    <span class="font-medium">公正包子</span>
+                    <a
+                      href="https://www.google.com/maps/search/?api=1&query=%E8%8A%B1%E8%93%AE%E5%85%AC%E6%AD%A3%E5%8C%85%E5%AD%90"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="map-pill inline-flex items-center gap-1 rounded-full border border-ocean/40 text-[10px] px-2 py-0.5 ml-1 text-ocean-dark hover:bg-ocean/10"
+                    >
+                      📍 地圖
+                    </a>
+                    或餛飩小店，簡單吃、不排隊也行。
                   </dd>
                 </div>
                 <div class="grid grid-cols-[auto,1fr] gap-x-3">
@@ -590,6 +744,14 @@
                   <dd>
                     🍸
                     <span class="font-semibold text-ocean-dark">「The Rising Coffee」</span>
+                    <a
+                      href="https://www.google.com/maps/search/?api=1&query=The%20Rising%20Coffee%20%E8%8A%B1%E8%93%AE"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="map-pill inline-flex items-center gap-1 rounded-full border border-ocean/40 text-[10px] px-2 py-0.5 ml-1 text-ocean-dark hover:bg-ocean/10"
+                    >
+                      📍 地圖
+                    </a>
                     ，白天咖啡、晚上變成酒吧的混合空間。
                   </dd>
                 </div>
@@ -599,39 +761,59 @@
 
           <!-- Day 3 -->
           <article
-            class="relative rounded-3xl bg-white/95 border border-white/90 shadow-sm hover:shadow-soft transition-shadow flex flex-col overflow-hidden"
+            class="day-card relative rounded-3xl bg-white/95 border border-white/90 shadow-sm hover:shadow-soft transition-shadow flex flex-col overflow-hidden"
           >
             <div class="h-1 w-full bg-gradient-to-r from-moss via-ocean to-sand-dark"></div>
-            <div class="p-4 sm:p-5 flex flex-col gap-3">
-              <header class="flex items-start justify-between gap-3">
-                <div>
-                  <div class="flex items-center gap-2 mb-1">
-                    <span
-                      class="inline-flex items-center justify-center rounded-full bg-sand-light px-2.5 py-1 text-[11px] font-semibold text-slate-800"
-                    >
-                      Day 3 · 2/3（二）
-                    </span>
-                    <span
-                      class="inline-flex items-center gap-1 rounded-full bg-sand-light/80 px-2 py-1 text-[11px] text-slate-600"
-                    >
-                      <span>☁️</span><span>多雲 · 市區軍事視角</span>
-                    </span>
-                  </div>
-                  <h3 class="text-sm font-semibold text-slate-900">
-                    舊車站氛圍 · 松園別館 · 太平洋邊散步
-                  </h3>
-                  <p class="mt-1 text-xs text-slate-600">
-                    從地面到高地，慢慢認識花蓮港的前世今生。
-                  </p>
+            <button
+              type="button"
+              class="w-full text-left p-4 sm:p-5 flex items-center justify-between gap-3 focus:outline-none"
+              aria-expanded="false"
+            >
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center gap-2 mb-1">
+                  <span
+                    class="inline-flex items-center justify-center rounded-full bg-sand-light px-2.5 py-1 text-[11px] font-semibold text-slate-800"
+                  >
+                    Day 3 · 2/3（二）
+                  </span>
+                  <span
+                    class="inline-flex items-center gap-1 rounded-full bg-sand-light/80 px-2 py-1 text-[11px] text-slate-600"
+                  >
+                    <span>☁️</span><span>多雲 · 市區軍事視角</span>
+                  </span>
                 </div>
-              </header>
-
-              <dl class="space-y-1.5 text-xs text-slate-700">
+                <h3 class="text-sm font-semibold text-slate-900 truncate">
+                  舊車站氛圍 · 松園別館 · 太平洋邊散步
+                </h3>
+                <p class="mt-1 text-xs text-slate-600 line-clamp-2">
+                  從地面到高地，慢慢認識花蓮港的前世今生。
+                </p>
+              </div>
+              <div class="flex items-center gap-2 shrink-0">
+                <span class="hidden sm:inline text-[11px] text-slate-500">點擊展開</span>
+                <span
+                  class="day-chevron inline-flex h-7 w-7 items-center justify-center rounded-full bg-sand-light text-slate-700"
+                  aria-hidden="true"
+                >
+                  ▼
+                </span>
+              </div>
+            </button>
+            <div class="day-body px-4 sm:px-5 pb-4 sm:pb-5">
+              <dl class="space-y-1.5 text-xs text-slate-700 pt-1 border-t border-sand/60 mt-1.5">
                 <div class="grid grid-cols-[auto,1fr] gap-x-3">
                   <dt class="text-slate-500">10:00</dt>
                   <dd>
                     🏛️
                     <span class="font-semibold text-moss-dark">花蓮鐵道文化園區</span>
+                    <a
+                      href="https://www.google.com/maps/search/?api=1&query=%E8%8A%B1%E8%93%AE%E9%90%B5%E9%81%93%E6%96%87%E5%8C%96%E5%9C%92%E5%8D%80"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="map-pill inline-flex items-center gap-1 rounded-full border border-ocean/40 text-[10px] px-2 py-0.5 ml-1 text-ocean-dark hover:bg-ocean/10"
+                    >
+                      📍 地圖
+                    </a>
                     ，在舊車站與老建築間散步。
                   </dd>
                 </div>
@@ -647,6 +829,14 @@
                       class="font-semibold text-moss-dark underline decoration-moss/40 decoration-2"
                       >松園別館 Pine Garden</span
                     >
+                    <a
+                      href="https://www.google.com/maps/search/?api=1&query=Pine%20Garden%20%E6%9D%BE%E5%9C%92%E5%88%A5%E9%A4%A8"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="map-pill inline-flex items-center gap-1 rounded-full border border-ocean/40 text-[10px] px-2 py-0.5 ml-1 text-ocean-dark hover:bg-ocean/10"
+                    >
+                      📍 地圖
+                    </a>
                     <span
                       class="ml-1 rounded-full bg-moss/10 text-moss-dark px-1.5 py-0.5 text-[10px] font-semibold"
                       >必去</span
@@ -668,34 +858,46 @@
 
           <!-- Day 4 -->
           <article
-            class="relative rounded-3xl bg-white/95 border border-ocean/30 shadow-md hover:shadow-soft transition-shadow flex flex-col overflow-hidden"
+            class="day-card relative rounded-3xl bg-white/95 border border-ocean/30 shadow-md hover:shadow-soft transition-shadow flex flex-col overflow-hidden"
           >
             <div class="h-1 w-full bg-gradient-to-r from-ocean-dark via-ocean to-sand-dark"></div>
-            <div class="p-4 sm:p-5 flex flex-col gap-3">
-              <header class="flex items-start justify-between gap-3">
-                <div>
-                  <div class="flex items-center gap-2 mb-1">
-                    <span
-                      class="inline-flex items-center justify-center rounded-full bg-ocean/10 px-2.5 py-1 text-[11px] font-semibold text-ocean-dark"
-                    >
-                      Day 4 · 2/4（三）
-                    </span>
-                    <span
-                      class="inline-flex items-center gap-1 rounded-full bg-ocean/10 px-2 py-1 text-[11px] text-ocean-dark"
-                    >
-                      <span>🌤️</span><span>轉晴 · 高地 &amp; 七星潭</span>
-                    </span>
-                  </div>
-                  <h3 class="text-sm font-semibold text-slate-900">
-                    機車高地日：48 Highland · 戰備坑道 · 七星潭
-                  </h3>
-                  <p class="mt-1 text-xs text-slate-600">
-                    這天是整趟旅程的視覺高潮：從軍事坑道到海景牧場，一路都在跟海線對話。
-                  </p>
+            <button
+              type="button"
+              class="w-full text-left p-4 sm:p-5 flex items-center justify-between gap-3 focus:outline-none"
+              aria-expanded="false"
+            >
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center gap-2 mb-1">
+                  <span
+                    class="inline-flex items-center justify-center rounded-full bg-ocean/10 px-2.5 py-1 text-[11px] font-semibold text-ocean-dark"
+                  >
+                    Day 4 · 2/4（三）
+                  </span>
+                  <span
+                    class="inline-flex items-center gap-1 rounded-full bg-ocean/10 px-2 py-1 text-[11px] text-ocean-dark"
+                  >
+                    <span>🌤️</span><span>轉晴 · 高地 &amp; 七星潭</span>
+                  </span>
                 </div>
-              </header>
-
-              <dl class="space-y-1.5 text-xs text-slate-700">
+                <h3 class="text-sm font-semibold text-slate-900 truncate">
+                  機車高地日：48 Highland · 戰備坑道 · 七星潭
+                </h3>
+                <p class="mt-1 text-xs text-slate-600 line-clamp-2">
+                  這天是整趟旅程的視覺高潮：從軍事坑道到海景牧場，一路都在跟海線對話。
+                </p>
+              </div>
+              <div class="flex items-center gap-2 shrink-0">
+                <span class="hidden sm:inline text-[11px] text-slate-500">點擊展開</span>
+                <span
+                  class="day-chevron inline-flex h-7 w-7 items-center justify-center rounded-full bg-sand-light text-slate-700"
+                  aria-hidden="true"
+                >
+                  ▼
+                </span>
+              </div>
+            </button>
+            <div class="day-body px-4 sm:px-5 pb-4 sm:pb-5">
+              <dl class="space-y-1.5 text-xs text-slate-700 pt-1 border-t border-sand/60 mt-1.5">
                 <div class="grid grid-cols-[auto,1fr] gap-x-3">
                   <dt class="text-slate-500">10:00</dt>
                   <dd>租機車，確認油量與雨具，準備高地一日小旅行。</dd>
@@ -706,8 +908,26 @@
                     🏞️
                     <span
                       class="font-semibold text-ocean-dark underline decoration-ocean/40 decoration-2"
-                      >48 Highland（四八高地）&amp; 戰備坑道</span
+                      >48 Highland（四八高地）</span
                     >
+                    <a
+                      href="https://www.google.com/maps/search/?api=1&query=48%20Highland%20%E5%9B%9B%E5%85%AB%E9%AB%98%E5%9C%B0"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="map-pill inline-flex items-center gap-1 rounded-full border border-ocean/40 text-[10px] px-2 py-0.5 ml-1 text-ocean-dark hover:bg-ocean/10"
+                    >
+                      📍 地圖
+                    </a>
+                    &amp;
+                    <span class="font-semibold text-ocean-dark">戰備坑道</span>
+                    <a
+                      href="https://www.google.com/maps/search/?api=1&query=%E8%8A%B1%E8%93%AE%20%E6%88%B0%E5%82%99%E5%9D%91%E9%81%93"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="map-pill inline-flex items-center gap-1 rounded-full border border-ocean/40 text-[10px] px-2 py-0.5 ml-1 text-ocean-dark hover:bg-ocean/10"
+                    >
+                      📍 地圖
+                    </a>
                     <span
                       class="ml-1 rounded-full bg-ocean/10 text-ocean-dark px-1.5 py-0.5 text-[10px] font-semibold"
                       >必去</span
@@ -722,15 +942,32 @@
                 <div class="grid grid-cols-[auto,1fr] gap-x-3">
                   <dt class="text-slate-500">15:00</dt>
                   <dd>
-                    🌊 七星潭海邊：
-                    <span class="font-medium">堆石、看海、什麼也不做</span>，只待在海浪聲裡。
+                    🌊
+                    <span class="font-medium">七星潭海邊</span>
+                    <a
+                      href="https://www.google.com/maps/search/?api=1&query=%E8%8A%B1%E8%93%AE%20%E4%B8%83%E6%98%9F%E6%BD%AD"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="map-pill inline-flex items-center gap-1 rounded-full border border-ocean/40 text-[10px] px-2 py-0.5 ml-1 text-ocean-dark hover:bg-ocean/10"
+                    >
+                      📍 地圖
+                    </a>
+                    ：堆石、看海、什麼也不做，只待在海浪聲裡。
                   </dd>
                 </div>
                 <div class="grid grid-cols-[auto,1fr] gap-x-3">
                   <dt class="text-slate-500">17:00</dt>
                   <dd>
                     ☕
-                    <span class="font-semibold text-ocean-dark">原野牧場（Yuan Ye Ranch）</span>
+                    <span class="font-semibold text-ocean-dark">原野牧場（Original Wild Ranch）</span>
+                    <a
+                      href="https://www.google.com/maps/search/?api=1&query=%E8%8A%B1%E8%93%AE%20%E5%8E%9F%E9%87%8E%E7%89%A7%E5%A0%B4"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="map-pill inline-flex items-center gap-1 rounded-full border border-ocean/40 text-[10px] px-2 py-0.5 ml-1 text-ocean-dark hover:bg-ocean/10"
+                    >
+                      📍 地圖
+                    </a>
                     ，海景羊奶咖啡，讓今天用很慢的夕陽收尾。
                   </dd>
                 </div>
@@ -740,40 +977,60 @@
 
           <!-- Day 5 -->
           <article
-            class="relative rounded-3xl bg-white/95 border border-ocean/20 shadow-sm hover:shadow-soft transition-shadow flex flex-col overflow-hidden"
+            class="day-card relative rounded-3xl bg-white/95 border border-ocean/20 shadow-sm hover:shadow-soft transition-shadow flex flex-col overflow-hidden"
           >
             <div class="h-1 w-full bg-gradient-to-r from-ocean via-moss-dark to-sand-dark"></div>
-            <div class="p-4 sm:p-5 flex flex-col gap-3">
-              <header class="flex items-start justify-between gap-3">
-                <div>
-                  <div class="flex items-center gap-2 mb-1">
-                    <span
-                      class="inline-flex items-center justify-center rounded-full bg-ocean/10 px-2.5 py-1 text-[11px] font-semibold text-ocean-dark"
-                    >
-                      Day 5 · 2/5（四）
-                    </span>
-                    <span
-                      class="inline-flex items-center gap-1 rounded-full bg-sand-light/80 px-2 py-1 text-[11px] text-slate-600"
-                    >
-                      <span>☀️</span><span>晴天 · 高地補完日</span>
-                    </span>
-                  </div>
-                  <h3 class="text-sm font-semibold text-slate-900">
-                    77 高地 · 石雕博物館 · 夜晚小酒吧
-                  </h3>
-                  <p class="mt-1 text-xs text-slate-600">
-                    若前一天天氣不穩，今天也可作為高地線的保留備案。
-                  </p>
+            <button
+              type="button"
+              class="w-full text-left p-4 sm:p-5 flex items-center justify-between gap-3 focus:outline-none"
+              aria-expanded="false"
+            >
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center gap-2 mb-1">
+                  <span
+                    class="inline-flex items-center justify-center rounded-full bg-ocean/10 px-2.5 py-1 text-[11px] font-semibold text-ocean-dark"
+                  >
+                    Day 5 · 2/5（四）
+                  </span>
+                  <span
+                    class="inline-flex items-center gap-1 rounded-full bg-sand-light/80 px-2 py-1 text-[11px] text-slate-600"
+                  >
+                    <span>☀️</span><span>晴天 · 高地補完日</span>
+                  </span>
                 </div>
-              </header>
-
-              <dl class="space-y-1.5 text-xs text-slate-700">
+                <h3 class="text-sm font-semibold text-slate-900 truncate">
+                  77 高地 · 石雕博物館 · 夜晚小酒吧
+                </h3>
+                <p class="mt-1 text-xs text-slate-600 line-clamp-2">
+                  若前一天天氣不穩，今天也可作為高地線的保留備案。
+                </p>
+              </div>
+              <div class="flex items-center gap-2 shrink-0">
+                <span class="hidden sm:inline text-[11px] text-slate-500">點擊展開</span>
+                <span
+                  class="day-chevron inline-flex h-7 w-7 items-center justify-center rounded-full bg-sand-light text-slate-700"
+                  aria-hidden="true"
+                >
+                  ▼
+                </span>
+              </div>
+            </button>
+            <div class="day-body px-4 sm:px-5 pb-4 sm:pb-5">
+              <dl class="space-y-1.5 text-xs text-slate-700 pt-1 border-t border-sand/60 mt-1.5">
                 <div class="grid grid-cols-[auto,1fr] gap-x-3">
                   <dt class="text-slate-500">10:00</dt>
                   <dd>
                     騎車前往
-                    <span class="font-semibold text-ocean-dark">77 Highland（七七高地）</span
-                    >，沿途欣賞農田與山景。
+                    <span class="font-semibold text-ocean-dark">77 Highland（七七高地）</span>
+                    <a
+                      href="https://www.google.com/maps/search/?api=1&query=77%20Highland%20%E4%B8%83%E4%B8%83%E9%AB%98%E5%9C%B0"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="map-pill inline-flex items-center gap-1 rounded-full border border-ocean/40 text-[10px] px-2 py-0.5 ml-1 text-ocean-dark hover:bg-ocean/10"
+                    >
+                      📍 地圖
+                    </a>
+                    ，沿途欣賞農田與山景。
                   </dd>
                 </div>
                 <div class="grid grid-cols-[auto,1fr] gap-x-3">
@@ -789,6 +1046,14 @@
                   <dd>
                     📷
                     <span class="font-semibold text-moss-dark">花蓮縣石雕博物館</span>
+                    <a
+                      href="https://www.google.com/maps/search/?api=1&query=%E8%8A%B1%E8%93%AE%E7%B8%A3%E7%9F%B3%E9%9B%95%E5%8D%9A%E7%89%A9%E9%A4%A8"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="map-pill inline-flex items-center gap-1 rounded-full border border-ocean/40 text-[10px] px-2 py-0.5 ml-1 text-ocean-dark hover:bg-ocean/10"
+                    >
+                      📍 地圖
+                    </a>
                     ：大片綠地草皮與大型雕塑，很適合慢慢走、慢慢拍照。
                   </dd>
                 </div>
@@ -797,6 +1062,14 @@
                   <dd>
                     🍸 酒吧：
                     <span class="font-semibold text-ocean-dark">「Island Bar 琴詩酒吧」</span>
+                    <a
+                      href="https://www.google.com/maps/search/?api=1&query=Island%20Bar%20%E7%90%B4%E8%A9%A9%E9%85%92%E5%90%A7%20%E8%8A%B1%E8%93%AE"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="map-pill inline-flex items-center gap-1 rounded-full border border-ocean/40 text-[10px] px-2 py-0.5 ml-1 text-ocean-dark hover:bg-ocean/10"
+                    >
+                      📍 地圖
+                    </a>
                     ，氛圍偏成熟、安靜的夜晚選項。
                   </dd>
                 </div>
@@ -806,39 +1079,59 @@
 
           <!-- Day 6 -->
           <article
-            class="relative rounded-3xl bg-white/95 border border-white/90 shadow-sm hover:shadow-soft transition-shadow flex flex-col overflow-hidden"
+            class="day-card relative rounded-3xl bg-white/95 border border-white/90 shadow-sm hover:shadow-soft transition-shadow flex flex-col overflow-hidden"
           >
             <div class="h-1 w-full bg-gradient-to-r from-sand-dark via-moss-light to-ocean"></div>
-            <div class="p-4 sm:p-5 flex flex-col gap-3">
-              <header class="flex items-start justify-between gap-3">
-                <div>
-                  <div class="flex items-center gap-2 mb-1">
-                    <span
-                      class="inline-flex items-center justify-center rounded-full bg-sand-light px-2.5 py-1 text-[11px] font-semibold text-slate-800"
-                    >
-                      Day 6 · 2/6（五）
-                    </span>
-                    <span
-                      class="inline-flex items-center gap-1 rounded-full bg-sand-light/80 px-2 py-1 text-[11px] text-slate-600"
-                    >
-                      <span>☀️</span><span>晴天 · 建築 &amp; Chill</span>
-                    </span>
-                  </div>
-                  <h3 class="text-sm font-semibold text-slate-900">
-                    老宅咖啡 · 容器星巴克 · 電影院廢片日
-                  </h3>
-                  <p class="mt-1 text-xs text-slate-600">
-                    把倒數第二天留給建築迷與想「什麼都不做」的你。
-                  </p>
+            <button
+              type="button"
+              class="w-full text-left p-4 sm:px-5 sm:pt-5 sm:pb-5 flex items-center justify-between gap-3 focus:outline-none"
+              aria-expanded="false"
+            >
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center gap-2 mb-1">
+                  <span
+                    class="inline-flex items-center justify-center rounded-full bg-sand-light px-2.5 py-1 text-[11px] font-semibold text-slate-800"
+                  >
+                    Day 6 · 2/6（五）
+                  </span>
+                  <span
+                    class="inline-flex items-center gap-1 rounded-full bg-sand-light/80 px-2 py-1 text-[11px] text-slate-600"
+                  >
+                    <span>☀️</span><span>晴天 · 建築 &amp; Chill</span>
+                  </span>
                 </div>
-              </header>
-
-              <dl class="space-y-1.5 text-xs text-slate-700">
+                <h3 class="text-sm font-semibold text-slate-900 truncate">
+                  老宅咖啡 · 容器星巴克 · 電影院廢片日
+                </h3>
+                <p class="mt-1 text-xs text-slate-600 line-clamp-2">
+                  把倒數第二天留給建築迷與想「什麼都不做」的你。
+                </p>
+              </div>
+              <div class="flex items-center gap-2 shrink-0">
+                <span class="hidden sm:inline text-[11px] text-slate-500">點擊展開</span>
+                <span
+                  class="day-chevron inline-flex h-7 w-7 items-center justify-center rounded-full bg-sand-light text-slate-700"
+                  aria-hidden="true"
+                >
+                  ▼
+                </span>
+              </div>
+            </button>
+            <div class="day-body px-4 sm:px-5 pb-4 sm:pb-5">
+              <dl class="space-y-1.5 text-xs text-slate-700 pt-1 border-t border-sand/60 mt-1.5">
                 <div class="grid grid-cols-[auto,1fr] gap-x-3">
                   <dt class="text-slate-500">11:00</dt>
                   <dd>
                     Brunch：
                     <span class="font-semibold text-moss-dark">「KOHI 齋」</span>
+                    <a
+                      href="https://www.google.com/maps/search/?api=1&query=KOHI%20%E9%BD%8B%20%E8%8A%B1%E8%93%AE"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="map-pill inline-flex items-center gap-1 rounded-full border border-ocean/40 text-[10px] px-2 py-0.5 ml-1 text-ocean-dark hover:bg-ocean/10"
+                    >
+                      📍 地圖
+                    </a>
                     ，老房子空間，細看窗框與光線。
                   </dd>
                 </div>
@@ -846,8 +1139,16 @@
                   <dt class="text-slate-500 mt-[1px]">14:00</dt>
                   <dd>
                     🏗️
-                    <span class="font-semibold text-ocean-dark">「洄瀾新天堂樂園」星巴克貨櫃屋</span>
-                    （New Paradigm / Starbucks Container Store），以「看建築」為主。
+                    <span class="font-semibold text-ocean-dark">「星巴克貨櫃屋」New Paradigm</span>
+                    <a
+                      href="https://www.google.com/maps/search/?api=1&query=%E8%8A%B1%E8%93%AE%20%E6%96%B0%E5%A4%A9%E5%A0%82%E6%A8%82%E5%9C%92%20%E6%98%9F%E5%B7%B4%E5%85%8B%E8%B2%A8%E6%AB%83"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="map-pill inline-flex items-center gap-1 rounded-full border border-ocean/40 text-[10px] px-2 py-0.5 ml-1 text-ocean-dark hover:bg-ocean/10"
+                    >
+                      📍 地圖
+                    </a>
+                    ，以「看建築」為主。
                   </dd>
                 </div>
                 <div class="grid grid-cols-[auto,1fr] gap-x-3">
@@ -864,34 +1165,46 @@
 
           <!-- Day 7 -->
           <article
-            class="relative rounded-3xl bg-white/95 border border-white/90 shadow-sm hover:shadow-soft transition-shadow flex flex-col overflow-hidden"
+            class="day-card relative rounded-3xl bg-white/95 border border-white/90 shadow-sm hover:shadow-soft transition-shadow flex flex-col overflow-hidden"
           >
             <div class="h-1 w-full bg-gradient-to-r from-sand-dark via-ocean-light to-moss"></div>
-            <div class="p-4 sm:p-5 flex flex-col gap-3">
-              <header class="flex items-start justify-between gap-3">
-                <div>
-                  <div class="flex items-center gap-2 mb-1">
-                    <span
-                      class="inline-flex items-center justify-center rounded-full bg-sand-light px-2.5 py-1 text-[11px] font-semibold text-slate-800"
-                    >
-                      Day 7 · 2/7（六）
-                    </span>
-                    <span
-                      class="inline-flex items-center gap-1 rounded-full bg-sand-light/80 px-2 py-1 text-[11px] text-slate-600"
-                    >
-                      <span>☁️</span><span>多雲 · 收心 &amp; 返家</span>
-                    </span>
-                  </div>
-                  <h3 class="text-sm font-semibold text-slate-900">
-                    緩慢退房 · 最後一杯咖啡 · 燈會場地巡禮
-                  </h3>
-                  <p class="mt-1 text-xs text-slate-600">
-                    沒有硬性安排，只是一步一步慢慢說再見。
-                  </p>
+            <button
+              type="button"
+              class="w-full text-left p-4 sm:p-5 flex items-center justify-between gap-3 focus:outline-none"
+              aria-expanded="false"
+            >
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center gap-2 mb-1">
+                  <span
+                    class="inline-flex items-center justify-center rounded-full bg-sand-light px-2.5 py-1 text-[11px] font-semibold text-slate-800"
+                  >
+                    Day 7 · 2/7（六）
+                  </span>
+                  <span
+                    class="inline-flex items-center gap-1 rounded-full bg-sand-light/80 px-2 py-1 text-[11px] text-slate-600"
+                  >
+                    <span>☁️</span><span>多雲 · 收心 &amp; 返家</span>
+                  </span>
                 </div>
-              </header>
-
-              <dl class="space-y-1.5 text-xs text-slate-700">
+                <h3 class="text-sm font-semibold text-slate-900 truncate">
+                  緩慢退房 · 最後一杯咖啡 · 燈會場地巡禮
+                </h3>
+                <p class="mt-1 text-xs text-slate-600 line-clamp-2">
+                  沒有硬性安排，只是一步一步慢慢說再見。
+                </p>
+              </div>
+              <div class="flex items-center gap-2 shrink-0">
+                <span class="hidden sm:inline text-[11px] text-slate-500">點擊展開</span>
+                <span
+                  class="day-chevron inline-flex h-7 w-7 items-center justify-center rounded-full bg-sand-light text-slate-700"
+                  aria-hidden="true"
+                >
+                  ▼
+                </span>
+              </div>
+            </button>
+            <div class="day-body px-4 sm:px-5 pb-4 sm:pb-5">
+              <dl class="space-y-1.5 text-xs text-slate-700 pt-1 border-t border-sand/60 mt-1.5">
                 <div class="grid grid-cols-[auto,1fr] gap-x-3">
                   <dt class="text-slate-500">11:00</dt>
                   <dd>退房，確認車票/班次時間，行李可寄放在住宿或車站置物櫃。</dd>
@@ -908,10 +1221,18 @@
                   <dt class="text-slate-500 mt-[1px]">17:00</dt>
                   <dd>
                     快速繞到
-                    <span class="font-semibold text-ocean-dark">太平洋公園附近</span>，
-                    看看
+                    <span class="font-semibold text-ocean-dark">太平洋公園附近</span>
+                    <a
+                      href="https://www.google.com/maps/search/?api=1&query=%E8%8A%B1%E8%93%AE%20%E5%A4%AA%E5%B9%B3%E6%B4%8B%E5%85%AC%E5%9C%92"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="map-pill inline-flex items-center gap-1 rounded-full border border-ocean/40 text-[10px] px-2 py-0.5 ml-1 text-ocean-dark hover:bg-ocean/10"
+                    >
+                      📍 地圖
+                    </a>
+                    ，看看
                     <span class="font-semibold">「花蓮太平洋燈會」</span>
-                    的布置現場，感受還沒點亮的燈。
+                    的布置現場。
                   </dd>
                 </div>
                 <div class="grid grid-cols-[auto,1fr] gap-x-3">
@@ -1059,7 +1380,7 @@
   </button>
 
   <script>
-    // 簡單的「回到頂端」按鈕互動
+    // 「回到頂端」按鈕
     const backToTopBtn = document.getElementById('backToTop');
     window.addEventListener('scroll', () => {
       if (window.scrollY > 420) {
@@ -1071,6 +1392,191 @@
     backToTopBtn.addEventListener('click', () => {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     });
+
+    // 每日行程 Accordion（可展開卡片）
+    const dayCards = document.querySelectorAll('.day-card');
+
+    dayCards.forEach((card) => {
+      const toggleBtn = card.querySelector('button');
+      const body = card.querySelector('.day-body');
+
+      if (!toggleBtn || !body) return;
+
+      // 預設全部收合
+      body.style.maxHeight = '0px';
+
+      toggleBtn.addEventListener('click', () => {
+        const isOpen = card.classList.contains('open');
+
+        if (isOpen) {
+          card.classList.remove('open');
+          toggleBtn.setAttribute('aria-expanded', 'false');
+          body.style.maxHeight = '0px';
+        } else {
+          card.classList.add('open');
+          toggleBtn.setAttribute('aria-expanded', 'true');
+          body.style.maxHeight = body.scrollHeight + 'px';
+        }
+      });
+
+      // 視窗尺寸改變時，若卡片是展開狀態，更新 max-height 避免內容被切掉
+      window.addEventListener('resize', () => {
+        if (card.classList.contains('open')) {
+          body.style.maxHeight = body.scrollHeight + 'px';
+        }
+      });
+    });
+
+    // Hero 區塊右側「花蓮七日 Chill 行程一覽」動態切換
+    const heroDayData = {
+      1: {
+        label: 'Day 1 · 2/1 日',
+        meta: '抵達 · 老房咖啡 · 夜市',
+        weatherIcon: '🌧️',
+        weatherText: '雨天',
+        items: [
+          { time: '13:30', text: '入住 Lazy House，先讓身體進入度假模式。' },
+          { time: '15:00', text: 'Giocare 咖啡：老屋 + 貓咪 + 手作器物。' },
+          { time: '17:00', text: '花蓮文創園區散步，在倉庫群裡躲雨。' },
+          { time: '19:00', text: '東大門夜市獵食，吃到飽就回去休息。' },
+        ],
+      },
+      2: {
+        label: 'Day 2 · 2/2 一',
+        meta: '雨備 · 考古博物館 · 喵喵咖啡',
+        weatherIcon: '🌧️',
+        weatherText: '雨天',
+        items: [
+          { time: '10:00', text: '睡到自然醒，在住宿吃個慵懶早午餐。' },
+          { time: '13:00', text: '花蓮縣考古博物館，補上歷史與小知識。' },
+          { time: '16:00', text: '喵喵咖啡，貓咪 + 美感空間，繼續待在室內避雨。' },
+          { time: '21:00', text: 'The Rising Coffee，晚上當小酒館收尾。' },
+        ],
+      },
+      3: {
+        label: 'Day 3 · 2/3 二',
+        meta: '舊車站 · 松園別館 · 太平洋',
+        weatherIcon: '☁️',
+        weatherText: '多雲',
+        items: [
+          { time: '10:00', text: '花蓮鐵道文化園區，感受舊車站與鐵道氛圍。' },
+          { time: '14:30', text: '松園別館，在松樹與老房子間慢慢走。' },
+          { time: '16:30', text: '往海邊方向散步，看太平洋的顏色變化。' },
+          { time: '19:00', text: '居酒屋小酌，聊聊目前為止最喜歡的景點。' },
+        ],
+      },
+      4: {
+        label: 'Day 4 · 2/4 三',
+        meta: '高地 · 戰備坑道 · 七星潭',
+        weatherIcon: '🌤️',
+        weatherText: '轉晴',
+        items: [
+          { time: '10:00', text: '租好機車，準備一整天的海線與高地。' },
+          { time: '11:00', text: '48 Highland + 戰備坑道，從軍事視角看太平洋。' },
+          { time: '15:00', text: '七星潭堆石、看海，任意找一處待著。' },
+          { time: '17:00', text: '原野牧場羊奶咖啡，邊看夕陽邊放空。' },
+        ],
+      },
+      5: {
+        label: 'Day 5 · 2/5 四',
+        meta: '77 高地 · 石雕博物館',
+        weatherIcon: '☀️',
+        weatherText: '晴天',
+        items: [
+          { time: '10:00', text: '前往 77 高地，從舊碉堡看整個花蓮平原。' },
+          { time: '13:00', text: '壽豐或附近小鎮午餐，隨意挑一間順眼的小店。' },
+          { time: '15:00', text: '花蓮縣石雕博物館，大草地與大型雕塑慢慢逛。' },
+          { time: '20:00', text: 'Island Bar 琴詩酒吧，優雅的夜間最後一杯。' },
+        ],
+      },
+      6: {
+        label: 'Day 6 · 2/6 五',
+        meta: '老宅建築 · 貨櫃星巴克 · 電影院',
+        weatherIcon: '☀️',
+        weatherText: '晴天',
+        items: [
+          { time: '11:00', text: 'KOHI 齋，老房子裡的光線與咖啡香。' },
+          { time: '14:00', text: '星巴克貨櫃屋，專心看建築與空間設計。' },
+          { time: '16:00', text: 'IMAX 電影或逛商場，讓腳與腦一起休息。' },
+          { time: '19:00', text: 'Bistro / 牛排館告別晚餐，替這趟旅程乾杯。' },
+        ],
+      },
+      7: {
+        label: 'Day 7 · 2/7 六',
+        meta: '收心 · 伴手禮 · 燈會場地',
+        weatherIcon: '☁️',
+        weatherText: '多雲',
+        items: [
+          { time: '11:00', text: '退房，把行李安置好，確認回程時間。' },
+          { time: '13:00', text: '最後一杯在地烘焙咖啡，記住這個味道。' },
+          { time: '15:00', text: '買伴手禮，挑選想帶回家的花蓮味。' },
+          { time: '17:00', text: '太平洋燈會場地走一圈，看還沒點亮的燈飾。' },
+        ],
+      },
+    };
+
+    const heroDayLabel = document.getElementById('heroDayLabel');
+    const heroDayMeta = document.getElementById('heroDayMeta');
+    const heroDayWeatherIcon = document.getElementById('heroDayWeatherIcon');
+    const heroDayWeatherText = document.getElementById('heroDayWeatherText');
+    const heroDayItems = document.getElementById('heroDayItems');
+    const heroDayCardBody = document.getElementById('heroDayCard');
+    const heroWeekButtons = document.querySelectorAll('.hero-week-day');
+
+    function renderHeroDay(dayKey) {
+      const data = heroDayData[dayKey];
+      if (!data) return;
+
+      // 更新 active 樣式
+      heroWeekButtons.forEach((btn) => {
+        if (btn.dataset.day === String(dayKey)) {
+          btn.classList.add('active');
+          btn.classList.remove('bg-sand-light/80', 'border-sand-dark/50');
+        } else {
+          btn.classList.remove('active');
+          btn.classList.add('bg-sand-light/80', 'border-sand-dark/50');
+        }
+      });
+
+      // 先移除可見 class，再在下一個 frame 加回去做淡入動畫
+      heroDayCardBody.classList.remove('visible');
+
+      // 短暫延遲讓動畫自然
+      setTimeout(() => {
+        heroDayLabel.textContent = data.label;
+        heroDayMeta.textContent = data.meta;
+        heroDayWeatherIcon.textContent = data.weatherIcon;
+        heroDayWeatherText.textContent = data.weatherText;
+
+        // 重建 items
+        heroDayItems.innerHTML = '';
+        data.items.forEach((item) => {
+          const timeDiv = document.createElement('div');
+          timeDiv.className = 'text-slate-500';
+          timeDiv.textContent = item.time;
+
+          const textDiv = document.createElement('div');
+          textDiv.className = 'text-slate-700';
+          textDiv.textContent = item.text;
+
+          heroDayItems.appendChild(timeDiv);
+          heroDayItems.appendChild(textDiv);
+        });
+
+        heroDayCardBody.classList.add('visible');
+      }, 50);
+    }
+
+    // 綁定按鈕事件
+    heroWeekButtons.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const dayKey = btn.dataset.day;
+        renderHeroDay(dayKey);
+      });
+    });
+
+    // 初始顯示 Day 4（與設計一致）
+    renderHeroDay(4);
   </script>
 </body>
 </html>
